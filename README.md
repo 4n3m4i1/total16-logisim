@@ -17,6 +17,9 @@ Assembler:
   - Reads in any file (hopefully in appropriate format..) and outputs a binary file with no extention,
   though one can be specified in the command line. 
   - A hex file is also output mirroring the binary file but with a .hex extention.
+  - Checks are done to make sure instruction format and opcodes are correct, semi detailed error messages will be produced
+  - CMD line arguments: -d, -D, -A, -h as the last argument will provide detailed outputs of each file/line processed
+  - Completely random formats are not checked for, make sure to provide only expected inputs.
   
   Instruction Basics:
   - 2 types:
