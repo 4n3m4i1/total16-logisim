@@ -1,0 +1,124 @@
+INSTRUCTION LAYOUT
+-----------------------------------------------------------------------------------------------
+OOOO OOXX XXXX XXXX
+
+6 bit OPCODE + INSTRUCTION LAYOUT + (5 bit address + 5 bit address) OR (10 bit immediate/address)
+-----------------------------------------------------------------------------------------------
+0x00	NOP	NOP
+0x01	MOV	Copy/Move values between registers
+0x02	SWP	Swap 2 registers
+0x03	LI	Load 5 bit immediate into a register
+0x04	ADD	Add 2 registers, return in first argument register (this holds for most ALU operations)
+0x05	UADD	NOT YET FULLY BUILT
+0x06	SUB
+0x07	USUB	NOT YET FULLY BUILT
+0x08	ADDI	Add a 5 bit immediate value to a register
+0x09	SUBI
+0x0A	MUL	Multiply 2 values, carry partially works with LO and HI registers
+0x0B	LMUL	NOT YET BUILT
+0x0C	DIV	HI and LO components auto filled
+0x0D	LOI	Load 10 bit immediate into GPR0
+0x0E	LSL	Left logical shift by value contained in 2nd argument register
+0x0F	LSI	Left shift immediate
+0x10	RSL
+0x11	RSI	Right Logical Shift by Immediate
+0x12	RSA	Right Shift Arithmetic
+0x13	ROTL	Rotate bits left
+0x14	AND	Logical AND, return in 1st argument
+0x15	OR	
+0x16	XOR
+0x17	NOT
+0x18	ANDI	Logical AND register with immediate value
+0x19	ORI	
+
+0x1A	LA	// Can be hardware supported eventually, as of now use label table and LW in assembler
+0x1B	LW	// For LA see Note L
+0x1C	SW
+0x1D	LWI	Load Word Immediate, not normally user accessable however used within assembler for LA
+0x1E	SWI	Store Word Immediate, see Note L
+
+0x20	CMEQ
+0x21	CMLT
+0x22	CMEZ
+0x23	CMEI
+0x24	CMLI
+0x25	
+0x26
+0x27
+0x28	SIT	// Necessitates an immediate argument for the number of instructions to skip
+0x29	SIF	//	for traditional skip next just use 1. Do not use 0 as an argument
+
+0x2A	J
+0x2B	JAL
+0x2C
+0x2D
+0x2E	PUSH
+0x2F	POP
+
+0x3F	SYSCALL
+
+REGISTER LAYOUT
+-----------------------------------------------------------------------------------------------
+5 bit addressable
+	General Purpose
+	---------------------------------------------------------------------------------------
+RO	0x00	$0		Zero Reference Register
+	0x01	$GPR0		General Purpose Register, Quick 10-bit load register (LOI)
+	0x02	$GPR1		General Purpose Register
+	0x03	$GRP2		General Purpose Register
+	0x04	$GPR3		General Purpose Register
+	0x05	$GPR4		W, General Purpose/Argument Passing Register, Syscall Arg0
+	0x06	$GPR5		X, General Purpose/Argument Passing Register, Syscall Arg1
+	0x07	$GPR6		Y, General Purpose/Argument Passing Register, Syscall Arg2
+	0x08	$GPR7		Z, General Purpose/Argument Passing/Function Return, Syscall Return
+	0x09	$GPR8		$FPR0
+	0x0A	$GPR9		$FPR1
+	0x0B	$GPRA		$FPR2
+	0x0C	$GPRB		$FPR3
+RO	0x0D	$pc		Program Counter
+	0x0E	$ra		Return Address
+	0x0F	$sp		Stack Pointer
+	0x10	$cmp		Comparison Register
+RO	0x11	$hi		Hi register, Division Resultant
+RO	0x12	$lo		Lo register, Division Remainder
+RO	0x13	$systick_hi	Upper 16 bits of 32 bit system timer, read only
+RO	0x14	$systick_lo	Lower 16 bits of 32 bit system timer, read only
+	0x15	$usr_clk0	User timer, default behavior system_clk / 1
+	0x16	$usr_clk1	User timer, default behavior system_clk / 2
+	0x17	$usr_clk2	User timer, default behavior system_clk / 4
+	0x18	$usr_clk3	User timer, default behavior system_clk / 8
+	0x19	
+	0x1A	
+	0x1B	
+	0x1C	
+	0x1D
+	0x1E	
+	0x1F	$interField	Interrupt Bitfield
+
+APPLICATION NOTES
+-----------------------------------------------------------------------------------------------
+Note A.
+	If an address or immediate is greater than the appropriate number of bits (5 or 10 depending on instruction) this value will be stored in a label and can be recalled
+	with a LW call. This is done by the assembler.
+	
+	Alternatively 2 10 bit load can be done with a LOI (long immediate) then add together to net needed value.
+	This is also done by the assembler, so just type LI (some register) (some value)
+
+Note B.
+	All timers are unsigned and exhibit defined overflow behavior
+
+Note L.
+	The first 32 words in memory will be dedicated to a label table containing most used jump labels.
+	These will be accessed with a LW instead of an LA in the assembled code.
+	This will also be accessed by LWI and SWI, which use a 5 bit immediate as their 2nd argument
+	that is sent as the RAM address instead of calling register read.
+
+
+SYSCALL BEHAVIOR
+-----------------------------------------------------------------------------------------------
+Syscalls take arguments and can return data.
+Sycalls can set parameters for communication, timers, interrupts, files, etc..
+
+MEMORY MAP
+-----------------------------------------------------------------------------------------------
+0x0000 - 0x0020		Label Table (Addresses of common jumps)
