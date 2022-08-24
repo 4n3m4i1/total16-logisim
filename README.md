@@ -20,7 +20,7 @@ Assembler:
   
   Instruction Basics:
   - 2 types:
-  - 6 bit opcode, 5 bit arg0, 5 bit arg1
+  - 6 bit opcode, 5 bit arg0, 5 bit arg1/immediate
   - 6 bit opcode, 10 bit immediate
   
   
