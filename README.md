@@ -1,3 +1,5 @@
+## NOTE: This is unfinished and may remain in the current broken state
+## Bigger and better things are coming :)
 # total16-logisim
 16-bit CPU design made in Logisim 2.7.1
 
