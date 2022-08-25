@@ -28,4 +28,10 @@ Assembler:
   - 6 bit opcode, 5 bit arg0, 5 bit arg1/immediate
   - 6 bit opcode, 10 bit immediate
   
+  # Running a program
+  - Reference example program for a guide
+  - Write a basic asm file (note: comparison, jump, and lw/sw hardware is unfinished if this message is here)
+  - run the assembler with the command line arguments: <source file path> <destination file path> <optional arguments>
+  - copy the contents of the hex file into the ROM, easily done by clicking ROM, saving the file, then copying contents over
+  - Make sure to have a NOP at the beginning of your program!
   
