@@ -30,6 +30,8 @@ Assembler:
   
   # Running a program
   - Reference example program for a guide
+  - If not using the provided assembler, reference provided instruction set description
+  - If using the provided assembler, compile the assembler with gcc or your favorite compiler
   - Write a basic asm file (note: comparison, jump, and lw/sw hardware is unfinished if this message is here)
   - run the assembler with the command line arguments: <source file path> <destination file path> <optional arguments>
   - copy the contents of the hex file into the ROM, easily done by clicking ROM, saving the file, then copying contents over
